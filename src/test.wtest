@@ -1,0 +1,119 @@
+import flota.*
+import rodados.*
+import pedidos.*
+
+test "Dependencia de deportes" {
+	const deportes = new Dependencia()
+	deportes.empleados(45)
+	
+	const cachito = new ChevroletCorsa()
+	const corsaAzul = new ChevroletCorsa()
+	const corsaVerde = new ChevroletCorsa()
+	const kwidGas = new RenaultKwid()
+	const autito = new AutosEspeciales()
+	kwidGas.tieneTanque(true)
+	cachito.color("rojo")
+	corsaAzul.color("azul")
+	corsaVerde.color("verde")
+	autito.capacidad(5)
+	autito.velocidadMaxima(160)
+	autito.peso(1200)
+	autito.color("beige")
+	
+	deportes.agregarFlota([cachito, corsaAzul, corsaVerde, kwidGas, autito])
+	
+	
+	// dependencia deportes
+	assert.equals(6450, deportes.pesoTotalFlota())
+	assert.that(deportes.estaBienEquipada())
+	assert.equals(7, deportes.capacidadTotalEnColor("azul"))
+	assert.equals("beige", deportes.colorDelRodadoMasRapido())
+	assert.that(deportes.esGrande())
+	assert.equals(25, deportes.capacidadFaltante())
+}
+
+test "Dependencia de cultura" {
+	const cultura = new Dependencia()
+	cultura.empleados(31)
+	
+	const kwidGas = new RenaultKwid()
+	const kwidGas2 = new RenaultKwid()
+	const kwidSin = new RenaultKwid()
+	const cachito = new ChevroletCorsa()
+	cachito.color("rojo")
+	kwidGas.tieneTanque(true)
+	kwidGas2.tieneTanque(true)
+	interior.tipo("popular")
+	motor.tipo("batatón")
+	
+	cultura.agregarFlota([cachito, kwidGas, kwidGas2, kwidSin, trafic])
+	
+	// dependencia cultura
+	assert.equals(10700, cultura.pesoTotalFlota())
+	assert.that(not cultura.estaBienEquipada())
+	assert.equals(10, cultura.capacidadTotalEnColor("azul"))
+	assert.equals("rojo", cultura.colorDelRodadoMasRapido())
+	assert.that(not cultura.esGrande())
+	assert.equals(5, cultura.capacidadFaltante())
+}
+
+test "cantidad de pasajeros en pedidos" {
+	const pedidosYa = new PedidoDeTranslado(pasajeros = 10)
+	const didi = new PedidoDeTranslado(pasajeros = 4)
+	const uber = new PedidoDeTranslado(pasajeros = 2)
+	const dependencia = new Dependencia()
+	dependencia.agregarPedido(pedidosYa)
+	dependencia.agregarPedido(didi)
+	dependencia.agregarPedido(uber)
+	
+	assert.equals(16, dependencia.totalPasajerosPedidos())
+}
+
+test "pedidos insatisfechos" {
+	const pedidosYa = new PedidoDeTranslado(pasajeros = 10, distancia = 200, tiempoMaximo = 8)
+	const didi = new PedidoDeTranslado(pasajeros = 4, distancia = 1000, tiempoMaximo = 10)
+	const uber = new PedidoDeTranslado(pasajeros = 2, distancia = 220, tiempoMaximo = 4)
+	pedidosYa.agregarColor("rojo")
+	didi.agregarColor("azul")
+	uber.agregarColor("rojo")
+	const cachito = new ChevroletCorsa()
+	cachito.color("rojo")
+	const dependencia = new Dependencia()
+	dependencia.agregarPedido(pedidosYa)
+	dependencia.agregarPedido(didi)
+	dependencia.agregarPedido(uber)
+	dependencia.agregarAFlota(cachito)
+	
+	assert.equals(2, dependencia.pedidosSinSatisfacer().size())
+	
+}
+
+test "es color incompatible comun" {
+	const pedidosYa = new PedidoDeTranslado(pasajeros = 10)
+	const didi = new PedidoDeTranslado(pasajeros = 4)
+	const uber = new PedidoDeTranslado(pasajeros = 2)
+	const dependencia = new Dependencia()
+	dependencia.agregarPedido(pedidosYa)
+	dependencia.agregarPedido(didi)
+	dependencia.agregarPedido(uber)
+	pedidosYa.agregarColor("rojo")
+	didi.agregarColor("rojo")
+	uber.agregarColor("rojo")
+	
+	assert.that(dependencia.esColorIncompatibleComun("rojo"))
+}
+
+test "no es color incompatible comun" {
+	const pedidosYa = new PedidoDeTranslado(pasajeros = 10)
+	const didi = new PedidoDeTranslado(pasajeros = 4)
+	const uber = new PedidoDeTranslado(pasajeros = 2)
+	const dependencia = new Dependencia()
+	dependencia.agregarPedido(pedidosYa)
+	dependencia.agregarPedido(didi)
+	dependencia.agregarPedido(uber)
+	pedidosYa.agregarColor("rojo")
+	didi.agregarColor("azul")
+	uber.agregarColor("rojo")
+	
+	assert.that(not dependencia.esColorIncompatibleComun("rojo"))
+}
